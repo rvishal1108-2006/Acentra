@@ -1,0 +1,55 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: acentra-order-hub
+  
+  # Default In-Memory H2 Database for instant zero-setup hackathon testing
+  datasource:
+    url: jdbc:h2:mem:acentradb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        concurrency: 3
+        max-concurrency: 5
+        auto-startup: false # Programmatically managed to gracefully handle offline broker
+
+# Application Custom Properties
+acentra:
+  rabbitmq:
+    exchange: orders.exchange
+    order-queue: orders.queue
+    retry-queue: orders.retry.queue
+    dlq: orders.dlq
+    routing-key: order.new
+    retry-routing-key: order.retry
+    dlq-routing-key: order.dlq
+  workers:
+    count: 3
+    processing-delay-min-ms: 1800
+    processing-delay-max-ms: 3200
+    failure-rate: 0.15
+    max-retries: 3
