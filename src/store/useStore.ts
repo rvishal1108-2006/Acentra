@@ -272,11 +272,14 @@ export const useStore = create<AppStore>((set, get) => ({
         successRate: stats.successRate ?? state.kpis.successRate,
         queueDepth: stats.queueDepth ?? state.kpis.queueDepth,
         activeWorkers: stats.activeWorkers ?? state.kpis.activeWorkers,
-        totalRetries: stats.retryCount ?? state.kpis.totalRetries,
+        retryQueueCount: stats.retryCount ?? state.kpis.retryQueueCount,
         dlqCount: stats.dlqCount ?? state.kpis.dlqCount,
-        sparklineReceived: stats.sparklineReceived ?? state.kpis.sparklineReceived,
-        sparklineProcessed: stats.sparklineProcessed ?? state.kpis.sparklineProcessed,
-        sparklineQueue: stats.sparklineQueue ?? state.kpis.sparklineQueue
+        sparklines: {
+          ...state.kpis.sparklines,
+          received: stats.sparklineReceived ?? state.kpis.sparklines.received,
+          processed: stats.sparklineProcessed ?? state.kpis.sparklines.processed,
+          queue: stats.sparklineQueue ?? state.kpis.sparklines.queue
+        }
       }
     }));
   },
@@ -290,7 +293,7 @@ export const useStore = create<AppStore>((set, get) => ({
             ...inv,
             available: found.available,
             reserved: found.reserved,
-            total: found.total
+            totalStock: found.totalStock
           };
         }
         return inv;

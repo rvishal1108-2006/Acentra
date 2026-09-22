@@ -133,16 +133,16 @@ export const backendApi = {
         id: String(item.id),
         sku: item.sku,
         name: item.name || item.sku,
-        total: item.totalStock,
+        image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&auto=format&fit=crop&q=60',
+        totalStock: item.totalStock,
         available: item.availableStock,
         reserved: item.reservedStock,
-        unit: 'units',
         lowStockThreshold: item.lowStockThreshold || 50,
+        reorderPoint: item.lowStockThreshold ? item.lowStockThreshold * 2 : 100,
         unitPrice: item.unitPrice || 499,
         category: 'Hardware',
-        leadTimeDays: 3,
-        safetyStock: item.lowStockThreshold || 50,
-        history: []
+        warehouse: 'US-East Primary',
+        lastUpdated: item.lastUpdated || new Date().toISOString()
       }));
     } catch (e) {
       console.warn('[BackendAPI] Failed to fetch inventory:', e);
